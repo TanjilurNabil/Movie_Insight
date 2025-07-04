@@ -7,7 +7,7 @@ using Movies.Contracts.Requests;
 
 namespace Movies.API.Controllers
 {
-    
+
     [ApiController]
     public class MoviesController : ControllerBase
     {
@@ -22,7 +22,29 @@ namespace Movies.API.Controllers
         {
             var movie = movieRequest.MapToMovie();
             await _movieRepository.CreateAsync(movie);
-            return Created($"/{ApiEndpoints.Movies.Create}/{movie.Id}", movie);
+            return CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
+            
+        }
+        [HttpGet(ApiEndpoints.Movies.Get)]
+        public async Task<IActionResult> Get([FromRoute] Guid id)
+        {
+            var movie  = await _movieRepository.GetByIdAsync(id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            return Ok(movie.MapToResponse());
+        }
+        [HttpGet(ApiEndpoints.Movies.GetAll)]
+        public async Task<IActionResult> GetAll()
+        {
+            var movies = await _movieRepository.GetAllAsync();
+            if(movies is null)
+            {
+                return NotFound();
+            }
+            var response = movies.MapToResponse();
+            return Ok(response);
         }
     }
 }

@@ -30,7 +30,8 @@ namespace Movies.Application.Repositories
 
         public Task<Movie?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var movie = _movies.FirstOrDefault(x => x.Id == id);
+            return Task.FromResult(movie);
         }
 
         public Task<bool> UpdateAsync(Movie movie)
