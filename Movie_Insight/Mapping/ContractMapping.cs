@@ -22,6 +22,7 @@ namespace Movies.API.Mapping
             {
                 Id = response.Id,
                 Title = response.Title,
+                Slug = response.Slug,
                 YearOfRelease = response.YearOfRelease,
                 Genres = response.Genres.ToList()
             };
