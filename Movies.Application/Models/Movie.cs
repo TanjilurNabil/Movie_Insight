@@ -12,9 +12,6 @@ namespace Movies.Application.Models
         public required Guid Id { get; init; }
         public required string Title { get; set; }
         public string Slug => GenerateSlug();
-
-       
-
         public required int YearOfRelease { get; set; }
         public List<String> Genres { get; init; } = new();
 
