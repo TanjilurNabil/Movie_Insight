@@ -10,7 +10,7 @@ namespace Movies.Application.Database
 {
     public  interface IDbConnectionFactory
     {
-        Task<IDbConnection> CreateConnectionAync();
+        Task<IDbConnection> CreateConnectionAync(CancellationToken token=default);
     }
 
     public class NpgSqlConnectionFactory : IDbConnectionFactory
@@ -22,10 +22,10 @@ namespace Movies.Application.Database
             _connectionString = connectionString;
         }
 
-        public async Task<IDbConnection> CreateConnectionAync()
+        public async Task<IDbConnection> CreateConnectionAync(CancellationToken token = default)
         {
             var connection = new NpgsqlConnection(_connectionString);
-            await connection.OpenAsync();
+            await connection.OpenAsync(token);
             return connection;
         }
     }
