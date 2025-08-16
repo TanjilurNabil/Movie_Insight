@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Movies.API.Mapping;
 using Movies.Application.Models;
@@ -8,7 +9,7 @@ using Movies.Contracts.Requests;
 
 namespace Movies.API.Controllers
 {
-
+    
     [ApiController]
     public class MoviesController : ControllerBase
     {
@@ -18,6 +19,7 @@ namespace Movies.API.Controllers
         {
             _movieService = movieService;
         }
+        [Authorize(AuthConstants.TrustedMemberPolicyName)]
         [HttpPost(ApiEndpoints.Movies.Create)]
         public async Task<IActionResult> Create([FromBody] CreateMovieRequest movieRequest, CancellationToken token)
         {
@@ -26,6 +28,7 @@ namespace Movies.API.Controllers
             return CreatedAtAction(nameof(Get), new { idOrSlug = movie.Id }, movie);
             
         }
+        
         [HttpGet(ApiEndpoints.Movies.Get)]
         public async Task<IActionResult> Get([FromRoute] string idOrSlug, CancellationToken token)
         {
@@ -37,6 +40,7 @@ namespace Movies.API.Controllers
             }
             return Ok(movie.MapToResponse());
         }
+       
         [HttpGet(ApiEndpoints.Movies.GetAll)]
         public async Task<IActionResult> GetAll(CancellationToken token)
         {
@@ -48,6 +52,7 @@ namespace Movies.API.Controllers
             var response = movies.MapToResponse();
             return Ok(response);
         }
+        [Authorize(AuthConstants.TrustedMemberPolicyName)]
         [HttpPut(ApiEndpoints.Movies.Update)]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateMovieRequest request, CancellationToken token)
         {
@@ -61,6 +66,7 @@ namespace Movies.API.Controllers
             return Ok(response);
 
         }
+        [Authorize(AuthConstants.AdminUserPolicyName)]
         [HttpDelete(ApiEndpoints.Movies.Delete)]
         public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken token)
         {
